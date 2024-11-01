@@ -1,0 +1,108 @@
+Четиринасочник претставува матрица во која се испишани зборови хоризонотално и вертикално, одлево-надесно и оддесно-налево. Притоа секој елемент од матрицата претставува буква од англиската азбука.
+
+пример скриени зборови: HAIR, OLE (прецртани), FISH, TOE (подвлечени)
+
+T H A I R E
+E S N K N E
+M I M J O L
+M F S P S T
+I F G E L O
+X U T Y O E
+Од стандарден влез се чита квадратна матрица од ред n (3 <= n <= 50), составена од знаци. Прво се чита бројот n - бројот на редици (колони) на матрицата, а потоа и самите елементи на матрицата (види пример).
+По читањето на матрицата, од стандарден влез се внесува збор составен од максимум 10 букви.
+
+Ваша задача е да определите дали тој збор се наоѓа во четиринасочникот (хоризонтално или вертикално, одлево-надесно или оддесно-налево). Потребно е да се испечати локацијата (ред, колона) на првата и последната буква од зборот. Доколку зборот повеќепати се наоѓа во четеринасочникот, треба да се испечати првото појавување, гледано елемент по елемент како што се чита матрицата.
+
+Доколку не се пронајде зборот, тогаш се печати Not Found.
+
+
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    
+    char matrix[50][50];
+
+    // Читање на матрицата
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            cin >> matrix[i][j];
+        }
+    }
+    
+    char word[11];
+    cin >> word;
+    int wordLen = strlen(word);
+    
+    // Пребарување во матрицата
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            // Хоризонтално одлево-надесно
+            if (j + wordLen <= n) {
+                bool found = true;
+                for (int k = 0; k < wordLen; ++k) {
+                    if (matrix[i][j + k] != word[k]) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
+                    cout << i << ", " << j << " -> " << i << ", " << (j + wordLen - 1) << endl;
+                    return 0;
+                }
+            }
+
+            // Хоризонтално оддесно-налево
+            if (j - wordLen + 1 >= 0) {
+                bool found = true;
+                for (int k = 0; k < wordLen; ++k) {
+                    if (matrix[i][j - k] != word[k]) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
+                    cout << i << ", " << j << " -> " << i << ", " << (j - wordLen + 1) << endl;
+                    return 0;
+                }
+            }
+
+            // Вертикално одозгора-надолу
+            if (i + wordLen <= n) {
+                bool found = true;
+                for (int k = 0; k < wordLen; ++k) {
+                    if (matrix[i + k][j] != word[k]) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
+                    cout << i << ", " << j << " -> " << (i + wordLen - 1) << ", " << j << endl;
+                    return 0;
+                }
+            }
+
+            // Вертикално оддолу-нагоре
+            if (i - wordLen + 1 >= 0) {
+                bool found = true;
+                for (int k = 0; k < wordLen; ++k) {
+                    if (matrix[i - k][j] != word[k]) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
+                    cout << i << ", " << j << " -> " << (i - wordLen + 1) << ", " << j << endl;
+                    return 0;
+                }
+            }
+        }
+    }
+
+    cout << "Not Found" << endl;
+    return 0;
+}
